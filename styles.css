@@ -65,6 +65,7 @@ div { width: 50%; height: 50%; float: left; }
     background-color: inherit;
     display: inline-block;
     color: white;
+    outline: 0 none;
 }
 
 #remove-button {
@@ -111,6 +112,7 @@ div { width: 50%; height: 50%; float: left; }
     background-color: inherit;
     display: inline-block;
     color: white;
+    outline: 0 none;
 }
 
 #addModal {
