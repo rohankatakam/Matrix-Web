@@ -12,13 +12,12 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </head>
     
-    
     <body>
         <img src="">
         <!-- Add and Remove Controls -->
         <div class="controls">
             <div id="add-button">
-                <button data-toggle="modal" data-target="#addModal">➕</button>
+                <button data-toggle="modal" data-target="#myModal">➕</button>
             </div>
             <div id="remove-button">
                 <button onclick="remove()" id="remove">➖</button>
@@ -26,6 +25,7 @@
         </div>
         
         <!-- Add Modal -->
+<!--
         <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -57,12 +57,51 @@
             </div>
           </div>
         </div>
+ -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Add Item</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                  <form>
+                  <div class="form-group">
+                    <br>
+                    <textarea class="form-control" id="info" style="resize: none; height: 80%"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <br>
+                    <select class="form-control" id="category"  onchange='styleModal(document.getElementById("category").value)'>
+                      <option>Do Now</option>
+                      <option>Schedule</option>
+                      <option>Delegate</option>
+                      <option>Eliminate</option>
+                    </select>
+                  </div>
+                </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="addItem()">Add</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
         
         <div id="topLeft">
         <h4 class="qTitle">DO NOW</h4>
             <div ondrop="drop(event)" ondragover="allowDrop(event)" id="topLeftContainer">
                 <!-- List Items -->
-                <div class="matrix-item" draggable="true"  ondragstart="drag(event)" id="yolk" onclick='deleteItem(this.id)'>First Matrix Item<br> </div>
+                
             </div>
         </div>
         
