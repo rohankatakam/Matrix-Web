@@ -1,0 +1,93 @@
+<html>
+<div class="login">
+    <img src="matrixLogo.jpg" style="width: 100px">
+    <br>
+    <br>
+    <div id="firebaseui-auth-container"></div>
+</div>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.9.0/firebase-app.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+             https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-auth.js"></script>
+        <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+        <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-database.js"></script>
+
+
+        <script>
+          // Your web app's Firebase configuration
+          var firebaseConfig = {
+            apiKey: "AIzaSyCBrnN-Egc8LrRTPFqJGk74PGEts50XAFE",
+            authDomain: "matrix-8eddd.firebaseapp.com",
+            databaseURL: "https://matrix-8eddd.firebaseio.com",
+            projectId: "matrix-8eddd",
+            storageBucket: "matrix-8eddd.appspot.com",
+            messagingSenderId: "324548862449",
+            appId: "1:324548862449:web:6e4dc8d51ccaa5db1ea450"
+          };
+          // Initialize Firebase
+          firebase.initializeApp(firebaseConfig);
+            
+            // Initialize the FirebaseUI Widget using Firebase.
+            var ui = new firebaseui.auth.AuthUI(firebase.auth());
+            
+            ui.start('#firebaseui-auth-container', {
+              signInOptions: [
+                firebase.auth.EmailAuthProvider.PROVIDER_ID
+              ],
+              // Other config options...
+            });
+             var uiConfig = {
+              callbacks: {
+                signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                  // User successfully signed in.
+                  // Return type determines whether we continue the redirect automatically
+                  // or whether we leave that to developer to handle.
+                    window.location.href = "matrix.html";
+                  return false;
+                }
+              },
+              // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+              signInFlow: 'popup',
+              signInSuccess: function(currentUser, credential, redirectUrl) {
+                  // Manually redirect.
+                  window.location.assign("matrix.html");
+                  // Do not automatically redirect.
+                  return false;
+                },
+              signInOptions: [
+                // Leave the lines as is for the providers you want to offer your users.
+                firebase.auth.EmailAuthProvider.PROVIDER_ID
+              ],
+              // Terms of service url.
+              tosUrl: '<your-tos-url>',
+              // Privacy policy url.
+              privacyPolicyUrl: '<your-privacy-policy-url>'
+            };
+            
+            if (ui.isPendingRedirect()) {
+              ui.start('#firebaseui-auth-container', uiConfig);
+            }
+        </script>
+</html>
+
+<style>
+    .login{
+        text-align: center;
+        width: 500px;
+        height: 500px;
+	   position: absolute;
+	   top:0;
+	   bottom: 0;
+	   left: 0;
+	   right: 0;
+  	
+	   margin: auto;
+    }
+    html {
+        background-color: aliceblue;
+    }
+</style>

@@ -1,33 +1,45 @@
 var removing = false;
 var noteImage = new Image(96,93);
 noteImage.src = 'noteDrag.png';
+var ref;
+
 
 var matrixItems = document.getElementsByClassName("matrix-item");
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        var displayName = user.displayName;
+        var email = user.email;
+        var emailVerified = user.emailVerified;
+        var photoURL = user.photoURL;
+        var isAnonymous = user.isAnonymous;
+        var uid = user.uid;
+        var providerData = user.providerData;
+        
+        ref = firebase.database().ref().child(uid);
+        var loginHeader = document.getElementById("loginHeader");
+        loginHeader.innerHTML = displayName.substring(0, displayName.indexOf(' ')) + "'s Matrix";
+        populateMatrix();
+      } else {
+        // User is signed out.
+        window.location.href = "login.html";
+      }
+    });
+}, false);
+
+
 
 
 function addItem(){
     info = document.getElementById("info").value;
     category = document.getElementById("category").value;
     
-    var custom_id = "matrix-item-" + (Math.random().toString(36).substr(2, 9)).toString();
-    
-    var item_html = "<span class='badge badge-light matrix-item' draggable='true'  ondragstart='drag(event)'" + "id=" + "'" + custom_id + "' onclick='deleteItem(this.id)'>" + info + "</span>";
-    
-    if(category == "Do Now"){
-        document.getElementById("topLeftContainer").innerHTML += item_html;
-    }
-    
-    if(category == "Schedule"){
-        document.getElementById("topRightContainer").innerHTML += item_html;
-    }
-    
-    if(category == "Delegate"){
-        document.getElementById("bottomLeftContainer").innerHTML += item_html;
-    }
-    
-    if(category == "Eliminate"){
-        document.getElementById("bottomRightContainer").innerHTML += item_html;
-    }
+    addItemToDatabase(info, category);
+    clearMatrix();
+    populateMatrix(category);
 }
 
 function deleteItem(item_id){
@@ -57,8 +69,53 @@ function remove(){
 }
 
 function removeElement(id) {
-    var elem = document.getElementById(id);
-    return elem.parentNode.removeChild(elem);
+    var doNowRef = ref.child("Do Now");
+    doNowRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+           if(id == item.custom_id){
+               doNowRef.child(childSnapshot.key).remove();
+               clearMatrix("Do Now");
+                populateMatrix();
+            }
+        });
+    });
+    
+    var scheduleRef = ref.child("Schedule");
+    scheduleRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+           if(id == item.custom_id){
+               scheduleRef.child(childSnapshot.key).remove();
+               clearMatrix("Schedule");
+                populateMatrix();
+            }
+        });
+    });
+    
+    var delegateRef = ref.child("Delegate");
+    delegateRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+           if(id == item.custom_id){
+               delegateRef.child(childSnapshot.key).remove();
+               clearMatrix("Delegate");
+                populateMatrix();
+            }
+        });
+    });
+    
+    var eliminateRef = ref.child("Eliminate");
+    eliminateRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+           if(id == item.custom_id){
+               eliminateRef.child(childSnapshot.key).remove();
+               clearMatrix("Eliminate");
+                populateMatrix();
+            }
+        });
+    });
 }
 
 function allowDrop(ev) {
@@ -73,11 +130,129 @@ function drag(ev) {
 function drop(ev) {
   ev.preventDefault();
   var data = ev.dataTransfer.getData("text");
-    if((ev.target.id == "topLeftContainer") || (ev.target.id == "topRightContainer") || (ev.target.id == "bottomLeftContainer") || (ev.target.id == "bottomRightContainer")){
-        ev.target.appendChild(document.getElementById(data));
+    var item = document.getElementById(data);
+    
+    if(ev.target.id == "topLeftContainer"){
+        removeElement(data);
+        addItemToDatabase(item.innerHTML, "Do Now");
     }
     
+    if(ev.target.id == "topRightContainer"){
+        removeElement(data);
+        addItemToDatabase(item.innerHTML, "Schedule");
+    }
+    
+    if(ev.target.id == "bottomLeftContainer"){
+        removeElement(data);
+        addItemToDatabase(item.innerHTML, "Delegate");
+    }
+    
+    if(ev.target.id == "bottomRightContainer"){
+        removeElement(data);
+        addItemToDatabase(item.innerHTML, "Eliminate");
+    }
+    
+    populateMatrix();
 }
+
+function populateMatrix(){
+    clearMatrix("Do Now");
+    clearMatrix("Schedule");
+    clearMatrix("Delegate");
+    clearMatrix("Eliminate");
+    var doNowRef = ref.child("Do Now");
+    doNowRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+            addItemToHTML(item.item, "Do Now", item.custom_id);
+        });
+    });
+    
+    var scheduleRef = ref.child("Schedule");
+    scheduleRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+            addItemToHTML(item.item, "Schedule", item.custom_id);
+        });
+    });
+    
+    var delegateRef = ref.child("Delegate");
+    delegateRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+            addItemToHTML(item.item, "Delegate", item.custom_id);
+        });
+    });
+    
+    var eliminateRef = ref.child("Eliminate");
+    eliminateRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+            addItemToHTML(item.item, "Eliminate", item.custom_id);
+        });
+    });
+}
+
+function addItemToHTML(info, category, custom_id){
+    var item_html = "<span class='badge badge-light matrix-item' draggable='true'  ondragstart='drag(event)'" + "id=" + "'" + custom_id + "' onclick='deleteItem(this.id)'>" + info + "</span>";
+    
+    if(category == "Do Now"){
+        document.getElementById("topLeftContainer").innerHTML += item_html;
+    }
+    
+    if(category == "Schedule"){
+        document.getElementById("topRightContainer").innerHTML += item_html;
+    }
+    
+    if(category == "Delegate"){
+        document.getElementById("bottomLeftContainer").innerHTML += item_html;
+    }
+    
+    if(category == "Eliminate"){
+        document.getElementById("bottomRightContainer").innerHTML += item_html;
+    }
+}
+
+function clearMatrix(category){
+    if(category == "Do Now"){
+        document.getElementById("topLeftContainer").innerHTML = "";
+    }
+    
+    if(category == "Schedule"){
+        document.getElementById("topRightContainer").innerHTML = "";
+    }
+    
+    if(category == "Delegate"){
+        document.getElementById("bottomLeftContainer").innerHTML = "";
+    }
+    
+    if(category == "Eliminate"){
+        document.getElementById("bottomRightContainer").innerHTML = "";
+    }
+}
+
+function addItemToDatabase(info, category){
+    var custom_id = "matrix-item-" + (Math.random().toString(36).substr(2, 9)).toString();
+    
+    var newItem = ref.child(category).push();
+    
+    newItem.set({
+        item: info,
+        custom_id: custom_id
+    });
+}
+
+function logout(){
+    firebase.auth().signOut()
+      .then(function() {
+        // Sign-out successful.
+      })
+      .catch(function(error) {
+        // An error happened
+      });
+}
+
+
 
 function styleModal(quadrant){
     var header = document.getElementsByClassName("modal-header")[0];

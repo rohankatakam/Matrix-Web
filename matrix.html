@@ -13,51 +13,24 @@
     </head>
     
     <body>
+        
+        
         <img src="">
         <!-- Add and Remove Controls -->
-        <div class="controls">
+        <div class="control-hub">
+            <p id="loginHeader">Rohan's Matrix</p>
+            <div class="controls">
             <div id="add-button">
                 <button data-toggle="modal" data-target="#myModal">➕</button>
             </div>
             <div id="remove-button">
                 <button onclick="remove()" id="remove">➖</button>
             </div>
+            </div>
+            <button onclick="logout()" id="logout-button">Logout</button>
         </div>
         
-        <!-- Add Modal -->
-<!--
-        <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
-              </div>
-                
-              <div class="modal-body">
-                <form>
-                  <div class="form-group">
-                    <br>
-                    <textarea class="form-control" id="info" rows="3" style="resize: none"></textarea>
-                  </div>
-                  <div class="form-group">
-                    <br>
-                    <select class="form-control" id="category">
-                      <option>Do Now</option>
-                      <option>Schedule</option>
-                      <option>Delegate</option>
-                      <option>Eliminate</option>
-                    </select>
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="addItem()">Add</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              </div>
-            </div>
-          </div>
-        </div>
- -->
+        
         <div class="modal fade" id="myModal">
             <div class="modal-dialog modal-dialog-centered">
               <div class="modal-content">
@@ -132,6 +105,33 @@
         <script src="backend.js"></script>
         
         <link rel="stylesheet" type="text/css" href="styles.css">
+        
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/7.9.0/firebase-app.js"></script>
+
+        <!-- TODO: Add SDKs for Firebase products that you want to use
+             https://firebase.google.com/docs/web/setup#available-libraries -->
+        <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-auth.js"></script>
+        <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+        <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-database.js"></script>
+
+
+        <script>
+          // Your web app's Firebase configuration
+          var firebaseConfig = {
+            apiKey: "AIzaSyCBrnN-Egc8LrRTPFqJGk74PGEts50XAFE",
+            authDomain: "matrix-8eddd.firebaseapp.com",
+            databaseURL: "https://matrix-8eddd.firebaseio.com",
+            projectId: "matrix-8eddd",
+            storageBucket: "matrix-8eddd.appspot.com",
+            messagingSenderId: "324548862449",
+            appId: "1:324548862449:web:6e4dc8d51ccaa5db1ea450"
+          };
+          // Initialize Firebase
+          firebase.initializeApp(firebaseConfig);
+        </script>
     </body>
 </html>
+
 
