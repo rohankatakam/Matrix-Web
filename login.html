@@ -46,7 +46,7 @@
                   // User successfully signed in.
                   // Return type determines whether we continue the redirect automatically
                   // or whether we leave that to developer to handle.
-                    window.location.href = "matrix.html";
+                    window.location.href = "index.html";
                   return false;
                 }
               },
@@ -54,7 +54,7 @@
               signInFlow: 'popup',
               signInSuccess: function(currentUser, credential, redirectUrl) {
                   // Manually redirect.
-                  window.location.assign("matrix.html");
+                  window.location.assign("index.html");
                   // Do not automatically redirect.
                   return false;
                 },
